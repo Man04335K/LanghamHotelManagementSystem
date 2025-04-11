@@ -126,10 +126,214 @@ namespace LanghamHotelManagementSystem
                             break;
                     }
                 }
+                catch (FormatException ex)
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                    Console.WriteLine(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
 
-                Console.Write("\nWould You Like To Continue(Y/N):");
-                ans = Convert.ToChar(Console.ReadLine());
-            } while (ans == 'y' || ans == 'Y');
+                Console.Write("\nWould You Like To Continue? (yes/no): ");//
+                ans = Console.ReadLine()?.Trim().ToLower();
+
+            } while (ans == "yes");
         }
+
+        static void AddRooms()
+        {
+            try
+            {
+                Console.Write("Please Enter the Total Number of Rooms in the Hotel: ");// Prompt user for total number of rooms
+                int totalRooms = Convert.ToInt32(Console.ReadLine());// Get the total number of rooms from user
+
+                for (int i = 0; i < totalRooms; i++)
+                {
+                    Console.Write("Please enter the Room Number: ");// Prompt user for room number
+                    int roomNo = Convert.ToInt32(Console.ReadLine());// Get the room number from user
+
+                    Room room = new Room { RoomNo = roomNo, IsAllocated = false };// Create a new room object
+                    listOfRooms.Add(room);// Add the room to the list of rooms
+                }
+
+                Console.WriteLine("Rooms Added Successfully!");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input. Please enter numeric values.");//for invalid input
+            }
+        }
+        static void DisplayRooms()
+        {
+            if (listOfRooms.Count == 0)
+            {
+                Console.WriteLine("No rooms found.");//for empty list
+                return;
+            }
+
+            Console.WriteLine("\nList of Rooms:");//for displaying the list of rooms
+            foreach (var room in listOfRooms)//for each room in the list
+            {
+                Console.WriteLine($"Room No: {room.RoomNo}, Allocated: {room.IsAllocated}");//for each room, display its number and allocation status
+            }
+        }
+        static void AllocateRoom()
+        {
+            try
+            {
+                Console.Write("Enter Room No to Allocate: ");// Prompt user for room number
+                int roomNo = Convert.ToInt32(Console.ReadLine());// Get the room number from user
+
+                Room room = listOfRooms.Find(r => r.RoomNo == roomNo && !r.IsAllocated);// Find the room that is not allocated
+                if (room == null)
+                    throw new InvalidOperationException("Room not available for allocation.");//for room not available
+
+                Console.Write("Enter Customer Number: ");// Prompt user for customer numberq
+                int custNo = Convert.ToInt32(Console.ReadLine());// Get the customer number from user
+                Console.Write("Enter Customer Name: ");// Prompt user for customer name
+                string name = Console.ReadLine();// Get the customer name from user
+
+                Customer customer = new Customer { CustomerNo = custNo, CustomerName = name };// Create a new customer object
+                room.IsAllocated = true;// Mark the room as allocated
+
+                listOfRoomAllocations.Add(new RoomsAllocation
+                {
+                    AllocatedRoomNo = roomNo,
+                    AllocatedCustomer = customer
+                });// Add the room allocation to the list
+
+                Console.WriteLine("Room Allocated Successfully!");//for successful allocation
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Please enter numeric values.");//for invalid input
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);//for room not available
+            }
+        }
+        static void DeallocateRoom()
+        {
+            try
+            {
+                Console.Write("Enter Room No to De-Allocate: ");// Prompt user for room number
+                int roomNo = Convert.ToInt32(Console.ReadLine());// Get the room number from user
+
+                var allocation = listOfRoomAllocations.Find(r => r.AllocatedRoomNo == roomNo);// Find the room allocation
+                if (allocation == null)
+                    throw new InvalidOperationException("Room not currently allocated.");//for room not allocated
+
+                listOfRoomAllocations.Remove(allocation);// Remove the allocation from the list
+
+                Room room = listOfRooms.Find(r => r.RoomNo == roomNo);// Find the room
+                if (room != null)
+                    room.IsAllocated = false;// Mark the room as not allocated
+
+                Console.WriteLine("Room De-Allocated Successfully!");//for successful deallocation
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);//for room not allocated
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Please enter numeric values.");//for invalid input
+            }
+        }
+        static void DisplayRoomAllocations()
+        {
+            if (listOfRoomAllocations.Count == 0)
+            {
+                Console.WriteLine("No allocations found.");//for empty list
+                return;
+            }
+
+            Console.WriteLine("\nRoom Allocations:");//for displaying the list of allocations
+            foreach (var alloc in listOfRoomAllocations)
+            {
+                Console.WriteLine($"Room No: {alloc.AllocatedRoomNo} -> Customer: {alloc.AllocatedCustomer.CustomerNo}, {alloc.AllocatedCustomer.CustomerName}");
+                //for each allocation, display the room number and customer details
+            }
+        }
+        static void SaveToFile()
+        {
+            string filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581.txt");// Get the path to the file
+            StreamWriter sw = null;// Initialize StreamWriter
+
+            try
+            {
+                sw = new StreamWriter(filename, true);
+                sw.WriteLine($"--- Room Allocations @ {DateTime.Now} ---");//for file header
+                foreach (var alloc in listOfRoomAllocations)
+                {
+                    sw.WriteLine($"Room No: {alloc.AllocatedRoomNo}, Customer: {alloc.AllocatedCustomer.CustomerNo}, {alloc.AllocatedCustomer.CustomerName}");
+                    //for each allocation, write the room number and customer details to the file
+                }
+
+                Console.WriteLine("Allocations saved to file successfully!");//for successful save
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine("Access denied. File is read-only.");//for file access denied
+            }
+            finally
+            {
+                if (sw != null)
+                {
+                    sw.Close();// Close the StreamWriter
+                }
+            }
+        }
+        static void LoadFromFile()
+        {
+            string filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581.txt");// Get the path to the file
+            StreamReader sr = null;// Initialize StreamReader
+
+            try
+            {
+                if (!File.Exists(filename))
+                    throw new FileNotFoundException("File not found.");//for file not found
+
+                sr = new StreamReader(filename);
+                Console.WriteLine("\nFile Content:\n" + sr.ReadToEnd());// Read the content of the file
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);//for file not found
+            }
+            finally
+            {
+                if (sr != null)
+                {
+                    sr.Close();// Close the StreamReader
+                }
+            }
+        }
+        static void BackupFile()
+        {
+            string mainFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581.txt");// Get the path to the main file
+            string backupFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581_backup.txt");// Get the path to the backup file
+
+            try
+            {
+                if (!File.Exists(mainFile))
+                    throw new FileNotFoundException("Main file not found.");//for file not found
+
+                string content = File.ReadAllText(mainFile);// Read the content of the main file
+                File.AppendAllText(backupFile, content);// Append the content to the backup file
+                File.WriteAllText(mainFile, string.Empty);// Clear the main file
+
+                Console.WriteLine("Backup created and main file cleared.");//for successful backup
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");//for any error
+            }
+        }
+
     }
+
 }
