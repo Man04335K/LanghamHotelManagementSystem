@@ -57,14 +57,10 @@ namespace LanghamHotelManagementSystem
             do
             {
                 Console.Clear();
-                Console.WriteLine("****************************************************************
-                * ******************");
-                Console.WriteLine(" LANGHAM HOTEL MANAGEMENT SYSTEM
-                ");
-                Console.WriteLine(" MENU
-                ");
-                Console.WriteLine("****************************************************************
-                * ******************");
+                Console.WriteLine("***********************************************************************************");
+                Console.WriteLine("                 LANGHAM HOTEL MANAGEMENT SYSTEM                  ");
+                Console.WriteLine("                            MENU                                 ");
+                Console.WriteLine("***********************************************************************************");
                 Console.WriteLine("1. Add Rooms");
                 Console.WriteLine("2. Display Rooms");
                 Console.WriteLine("3. Allocate Rooms");
@@ -74,44 +70,60 @@ namespace LanghamHotelManagementSystem
                 Console.WriteLine("7. Save the Room Allocations To a File");
                 Console.WriteLine("8. Show the Room Allocations From a File");
                 Console.WriteLine("9. Exit");
-                // Add new option 0 for Backup
-                Console.WriteLine("****************************************************************
-                * ******************");
-                Console.Write("Enter Your Choice Number Here:");
-                int choice = Convert.ToInt32(Console.ReadLine());
-                switch (choice)
+                Console.WriteLine("0. Backup Allocations File");
+                Console.WriteLine("***********************************************************************************");
+
+                try
+
                 {
-                    case 1:
-                        // adding Rooms function
-                        break;
-                    case 2:
-                        // display Rooms function;
-                        break;
-                    case 3:
-                        // allocate Room To Customer function
-                        break;
-                    case 4:
-                        // De-Allocate Room From Customer function
-                        break;
-                    case 5:
-                        // display Room Alocations function;
-                        break;
-                    case 6:
-                        // Display "Billing Feature is Under Construction and will
-                        be added soon...!!!"
-                break;
-                    case 7:
-                        // SaveRoomAllocationsToFile
-                        break;
-                    case 8:
-                        //Show Room Allocations From File
-                        break;
-                    case 9:
-                        // Exit Application
-                        break;
-                    default:
-                        break;
+                    Console.Write("Enter Your Choice Number Here:");
+                    int choice = Convert.ToInt32(Console.ReadLine());
+
+
+                    switch (choice)//Switch case to handle user choice
+                    {
+
+                        case 1:
+                            AddRooms();// Add rooms to the list
+                            break;
+                        case 2:
+                            DisplayRooms();// Display the list of rooms
+                            break;
+                        case 3:
+                            AllocateRoom();// Allocate a room to a customer
+                            break;
+                        case 4:
+                            DeallocateRoom();// Deallocate a room from a customer
+                            break;
+                        case 5:
+                            DisplayRoomAllocations();// Display room allocation details
+                            break;
+                        case 6:
+                            Console.WriteLine("Billing Feature is Under Construction and will be added soon…!!!");
+                            // Billing feature is not implemented yet
+                            break;
+
+                        case 7:
+                            SaveToFile();// Save room allocation details to a file
+                            break;
+                        case 8:
+                            LoadFromFile();// Show room allocation details from a file
+                            break;
+                        case 9:
+                            // Exit Application
+                            Console.WriteLine("Exiting the Application. Thank you for using the Hotel Management System.");
+                            // Exit the loop
+                            break;
+                        case 0:
+                            BackupFile();// Backup the room allocation file
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice. Please enter a number between 1 and 9.");
+                            break;
+                            break;
+                    }
                 }
+
                 Console.Write("\nWould You Like To Continue(Y/N):");
                 ans = Convert.ToChar(Console.ReadLine());
             } while (ans == 'y' || ans == 'Y');
