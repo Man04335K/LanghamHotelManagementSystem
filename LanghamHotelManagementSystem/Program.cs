@@ -1,8 +1,8 @@
 ﻿/* 
- * Project Name:
- * Author Name:
- * Date:
- * Application Purpose:
+ * Project Name:LANGHAM Hotel Management System
+ * Author Name:Manpreet Kaur
+ * Date:10/04/2025
+ * Application Purpose:To manage hotel room allocation, customer records,file storage,and backups with exception handling
  * 
  */
 
@@ -10,53 +10,61 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
-namespace Assessment2Task2
+namespace LanghamHotelManagementSystem
 {
+    // Custom Class - Room
     // Custom Class - Room
     public class Room
     {
-        public int RoomNo()
-            public bool IsAllocated()
-        }
+        public int RoomNo { get; set; }  // Room Number            
+        public bool IsAllocated { get; set; } = false; // Room Allocation Status 
+    }
 
     // Custom Class - Customer
     public class Customer
     {
-        public int CustomerNo()
-            public string CustomerName()
-        }
+        public int CustomerNo { get; set; } // Customer number
+        public string CustomerName { get; set; } // Customer name
+
+    }
 
     // Custom Class - RoomAllocation
-    public class RoomlAllocaltion
+    public class RoomsAllocation
     {
-        public int AllocatedRoomNo()
-            public Customer AllocatedCustomer()
-        }
+        public int AllocatedRoomNo { get; set; } // Allocated room number
+        public Customer AllocatedCustomer { get; set; } // Customer details
+
+
+    }
 
     // Custom Main Class - Program
     class Program
     {
         // Variables declaration and initialization
-        public static Room[] listofRooms;
-        public static int[] listOfRoomlAllocaltions;
-        public static string filePath;
+        public static List<Room> listOfRooms = new List<Room>();
+        public static List<RoomsAllocation> listOfRoomAllocations = new List<RoomsAllocation>();
 
+        public static string filePath;
         // Main function
         static void Main(string[] args)
         {
-            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string folderPath =
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             filePath = Path.Combine(folderPath, "HotelManagement.txt");
-
             char ans;
-
             do
             {
                 Console.Clear();
-                Console.WriteLine("***********************************************************************************");
-                Console.WriteLine("                 LANGHAM HOTEL MANAGEMENT SYSTEM                  ");
-                Console.WriteLine("                            MENU                                 ");
-                Console.WriteLine("***********************************************************************************");
+                Console.WriteLine("****************************************************************
+                * ******************");
+                Console.WriteLine(" LANGHAM HOTEL MANAGEMENT SYSTEM
+                ");
+                Console.WriteLine(" MENU
+                ");
+                Console.WriteLine("****************************************************************
+                * ******************");
                 Console.WriteLine("1. Add Rooms");
                 Console.WriteLine("2. Display Rooms");
                 Console.WriteLine("3. Allocate Rooms");
@@ -66,11 +74,11 @@ namespace Assessment2Task2
                 Console.WriteLine("7. Save the Room Allocations To a File");
                 Console.WriteLine("8. Show the Room Allocations From a File");
                 Console.WriteLine("9. Exit");
-                // Add new option 0 for Backup 
-                Console.WriteLine("***********************************************************************************");
+                // Add new option 0 for Backup
+                Console.WriteLine("****************************************************************
+                * ******************");
                 Console.Write("Enter Your Choice Number Here:");
                 int choice = Convert.ToInt32(Console.ReadLine());
-
                 switch (choice)
                 {
                     case 1:
@@ -89,8 +97,9 @@ namespace Assessment2Task2
                         // display Room Alocations function;
                         break;
                     case 6:
-                        //  Display "Billing Feature is Under Construction and will be added soon…!!!"
-                        break;
+                        // Display "Billing Feature is Under Construction and will
+                        be added soon...!!!"
+                break;
                     case 7:
                         // SaveRoomAllocationsToFile
                         break;
@@ -103,11 +112,9 @@ namespace Assessment2Task2
                     default:
                         break;
                 }
-
                 Console.Write("\nWould You Like To Continue(Y/N):");
                 ans = Convert.ToChar(Console.ReadLine());
             } while (ans == 'y' || ans == 'Y');
         }
     }
-
 }
