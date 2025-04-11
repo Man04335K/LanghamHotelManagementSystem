@@ -46,15 +46,18 @@ namespace LanghamHotelManagementSystem
          public static List<Room> listOfRooms = new List<Room>();
         public static List<RoomsAllocation> listOfRoomAllocations = new List<RoomsAllocation>();
 
-        public static string filePath;
+        static string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581.txt");
+        static string backupPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "lhms_850002581_backup.txt");
         // Main function
         static void Main(string[] args)
         {
-            string folderPath =
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            filePath = Path.Combine(folderPath, "HotelManagement.txt");
-            char ans;
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);//Get the path to the user's Documents folder
+            filePath = Path.Combine(folderPath, "HotelManagement.txt");// Combine the folder path with the file name
+
+            string ans; // Variable to store user response
+
             do
+
             {
                 Console.Clear();
                 Console.WriteLine("***********************************************************************************");
