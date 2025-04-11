@@ -15,7 +15,7 @@ using System.Xml.Linq;
 namespace LanghamHotelManagementSystem
 {
     // Custom Class - Room
-    // Custom Class - Room
+       // Custom Class - Room
     public class Room
     {
         public int RoomNo { get; set; }  // Room Number            
@@ -43,7 +43,7 @@ namespace LanghamHotelManagementSystem
     class Program
     {
         // Variables declaration and initialization
-        public static List<Room> listOfRooms = new List<Room>();
+         public static List<Room> listOfRooms = new List<Room>();
         public static List<RoomsAllocation> listOfRoomAllocations = new List<RoomsAllocation>();
 
         public static string filePath;
